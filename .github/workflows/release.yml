@@ -1,0 +1,63 @@
+name: Build and Release
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v3.0.2.0)'
+        required: true
+        default: 'v3.0.2.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Get version from release or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Create Module ZIP
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          
+          # Create module zip with available files
+          zip -r "HyperOS3_EU_Localization_${VERSION}.zip" \
+            META-INF module.prop customize.sh service.sh uninstall.sh lang tools \
+            -x "*.git*" || echo "Some files may be missing"
+            
+          # Add system files if present
+          if [ -d "system" ]; then
+            zip -ur "HyperOS3_EU_Localization_${VERSION}.zip" system
+            echo "Added system files to ZIP"
+          else
+            echo "Warning: system/ directory not found. Upload system.zip to release manually."
+          fi
+          
+          ls -la *.zip
+          
+      - name: Upload to Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            HyperOS3_EU_Localization_${{ steps.version.outputs.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload Artifact (for manual workflow)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: module-zip
+          path: "*.zip"
