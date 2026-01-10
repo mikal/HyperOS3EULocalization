@@ -1,0 +1,40 @@
+# Build outputs
+*.zip
+*.apk
+*.idsig
+
+# Module system files (large APKs, distribute via Releases)
+system/
+
+# Development tools (not part of module)
+toolbox/
+android-sdk/
+erofs-utils/
+payload-dumper-go
+payload-dumper-go_*.tar.gz
+
+# Extracted ROM files
+rom/
+extracted_new/
+
+# Python virtual environment
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Debug logs
+*.log
+*.txt
+!lang/*.txt
+
+# Debug scripts (development only)
+capture_logs_auto.sh
+debug_crash.sh
+debug_runtime.sh
+
+# OS generated
+.DS_Store
+Thumbs.db
