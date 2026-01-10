@@ -1,10 +1,6 @@
 # Build outputs
 *.zip
-*.apk
 *.idsig
-
-# Module system files (large APKs, distribute via Releases)
-system/
 
 # Toolbox build outputs
 toolbox/.gradle/
