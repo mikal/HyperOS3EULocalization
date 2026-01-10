@@ -6,8 +6,14 @@
 # Module system files (large APKs, distribute via Releases)
 system/
 
-# Development tools (not part of module)
-toolbox/
+# Toolbox build outputs
+toolbox/.gradle/
+toolbox/app/build/
+toolbox/build/
+toolbox/local.properties
+toolbox/*.keystore
+
+# Development tools
 android-sdk/
 erofs-utils/
 payload-dumper-go
