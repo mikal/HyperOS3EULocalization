@@ -1,6 +1,10 @@
 # Build outputs
 *.zip
+*.apk
 *.idsig
+
+# Allow APKs in system/ for Git LFS
+!system/**/*.apk
 
 # Toolbox build outputs
 toolbox/.gradle/
