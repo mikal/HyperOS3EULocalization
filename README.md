@@ -1,8 +1,8 @@
 # HyperOS3 EU Localization
 
-为 xiaomi.eu HyperOS3 ROM 恢复原版 HyperOS 功能的 Magisk/KernelSU 模块。
-
-Reintegrate original HyperOS features for xiaomi.eu HyperOS3 ROM.
+**还在研究中**，准备针对小米17Ultra的3.0.15版本EU ROM，恢复原版 HyperOS 功能的 Magisk/KernelSU 模块。
+**Still working on the developping**
+Plan to release a Magisk/KernelSU module for Xiaomi 17 Ultra 3.0.15 EU ROM that restores the original HyperOS features.
 
 ## 功能 / Features
 
@@ -14,7 +14,7 @@ Reintegrate original HyperOS features for xiaomi.eu HyperOS3 ROM.
 
 ## 安装要求 / Requirements
 
-- Xiaomi 13 (fuxi) 搭载 xiaomi.eu HyperOS 3 ROM（仅在该环境下测试通过）
+- Xiaomi 17 Ultra (nezha) 搭载 xiaomi.eu HyperOS 3 ROM（仅在该环境下测试通过）
 - Magisk / KernelSU / APatch 等 Root 方案
 - LSPosed / LSPatch（用于 Xposed 模块功能）
 
@@ -39,6 +39,8 @@ Reintegrate original HyperOS features for xiaomi.eu HyperOS3 ROM.
 本项目 fork 自以下仓库：
 
 - [MinaMichita/MiuiEULocalizationToolsBox](https://github.com/MinaMichita/MiuiEULocalizationToolsBox) - 原版 MIUI EU 本地化模块
+- [LSHFGJ/HyperOS3EULocalization](https://github.com/LSHFGJ/HyperOS3EULocalization) - HyperOS3 EU 本地化项目
+- [WindsorWu/HyperOS EU 欧洲版 本地化 Magisk 模块](https://blog.nekolin.top/2025/01/24/HyperOSEULocalization/) - HyperOS2 EU 本地化项目
 
 感谢原作者 [**@MinaMichita**](https://github.com/MinaMichita) 的开创性工作！
 
