@@ -1,8 +1,9 @@
 # HyperOS3 EU Localization
 
-**还在研究中**，准备针对小米17Ultra的3.0.15版本EU ROM，恢复原版 HyperOS 功能的 Magisk/KernelSU 模块。
-**Still working on the developping**
-Plan to release a Magisk/KernelSU module for Xiaomi 17 Ultra 3.0.15 EU ROM that restores the original HyperOS features.
+**还在研究中**  
+准备针对小米17Ultra的3.0.15版本EU ROM，恢复原版 HyperOS 功能的 Magisk/KernelSU 模块。  
+**Still working on the developping**  
+Plan to release a Magisk/KernelSU module for Xiaomi 17 Ultra 3.0.15 EU ROM that restores the original HyperOS features.  
 
 ## 功能 / Features
 
