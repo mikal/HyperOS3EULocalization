@@ -69,7 +69,7 @@ set_config() {
 }
 
 enable_all() {
-    local keys="Mipay AppStore VoiceAssist PersonalAssistant Mms ContentExtension YellowPage AiAsst RemoveMod HybridPlatform"
+    local keys="Mipay AppStore VoiceAssist PersonalAssistant Mms ContentExtension YellowPage AiAsst RemoveMod HybridPlatform Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager"
     for key in $keys; do
         set_config $key "true"
     done
@@ -87,6 +87,15 @@ YellowPage=false
 AiAsst=false
 VoiceAssist=false
 RemoveMod=false
+Calendar=false
+Weather=false
+Music=false
+Gallery=false
+MediaEditor=false
+SoundRecorder=false
+ThemeManager=false
+GboardTheme=false
+MiuiIme=false
 EOF
 }
 
@@ -109,7 +118,7 @@ else
 
     ui_print ""
     ui_print "Q2: Basic services"
-    ui_print "  XiaoAI / Assistant / MMS / Content Extension / Yellow Page"
+    ui_print "  XiaoAI / Assistant / MMS / Content Extension / Yellow Page "
     if vk_choose; then
         print_success "Selected basic services"
         set_config "VoiceAssist" "true"
@@ -152,6 +161,52 @@ else
     else
         print_info "Skipped system tweaks"
     fi
+
+    ui_print ""
+    ui_print "Q6: Media & Life"
+    ui_print "  Calendar / Weather / Music"
+    if vk_choose; then
+        print_success "Selected Media & Life"
+        set_config "Calendar" "true"
+        set_config "Weather" "true"
+        set_config "Music" "true"
+    else
+        print_info "Skipped Media & Life"
+    fi
+
+    ui_print ""
+    ui_print "Q7: Gallery & Editor"
+    ui_print "  Gallery / Editor for CN"
+    if vk_choose; then
+        print_success "Selected Gallery & Editor"
+        set_config "Gallery" "true"
+        set_config "MediaEditor" "true"
+    else
+        print_info "Skipped Gallery & Editor"
+    fi
+
+    ui_print ""
+    ui_print "Q8: Misc Apps"
+    ui_print "  Recorder / Theme for CN"
+    if vk_choose; then
+        print_success "Selected Misc Apps"
+        set_config "SoundRecorder" "true"
+        set_config "ThemeManager" "true"
+    else
+        print_info "Skipped Misc Apps"
+    fi
+
+    ui_print ""
+    ui_print "Q9: Input Method"
+    ui_print "  GboardTheme / MiuiIme CN"
+    if vk_choose; then
+        print_success "Selected Input Method"
+        set_config "GboardTheme" "true"
+        set_config "MiuiIme" "true"
+    else
+        print_info "Skipped Input Method"
+    fi   
+
 fi
 
 ui_print ""

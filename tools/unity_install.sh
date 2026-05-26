@@ -95,6 +95,15 @@ YellowPage=${YellowPage:-false}
 AiAsst=${AiAsst:-false}
 VoiceAssist=${VoiceAssist:-false}
 RemoveMod=${RemoveMod:-false}
+Calendar=${Calendar:-false}
+Weather=${Weather:-false}
+Music=${Music:-false}
+Gallery=${Gallery:-false}
+MediaEditor=${MediaEditor:-false}
+SoundRecorder=${SoundRecorder:-false}
+ThemeManager=${ThemeManager:-false}
+GboardTheme=${GboardTheme:-false}
+MiuiIme=${MiuiIme:-false}
 
 if [ ! -e "$MODPATH/system/product/app/MINextpay" ] || [ ! -e "$MODPATH/system/product/app/MITSMClient" ] || [ ! -e "$MODPATH/system/product/app/MipayWallet" ] || [ ! -e "$MODPATH/system/product/app/UPTsmService" ] || [ ! -e "$MODPATH/system/product/app/PaymentService" ] ;then
     Mipay=false
@@ -110,7 +119,7 @@ if bool_enabled "$AiAsst" ;then
     YellowPage=true
 fi
 
-if bool_enabled "$Mms" || bool_enabled "$ContentExtension" || bool_enabled "$PersonalAssistant" || bool_enabled "$AiAsst" || bool_enabled "$VoiceAssist" || bool_enabled "$YellowPage" ;then
+if bool_enabled "$Mms" || bool_enabled "$ContentExtension" || bool_enabled "$PersonalAssistant" || bool_enabled "$AiAsst" || bool_enabled "$VoiceAssist" || bool_enabled "$YellowPage" || bool_enabled "$Gallery" || bool_enabled "$MiuiIme" || bool_enabled "$SoundRecorder" ;then
     RemoveMod=true
 fi
 
@@ -118,6 +127,48 @@ if bool_enabled "$RemoveMod" ;then
     Contacts=true
 else
     Contacts=false
+fi
+
+if bool_enabled "$Weather" ;then
+    Weather=true
+else
+    Weather=false
+fi
+
+if bool_enabled "$Calendar" ;then
+    Calendar=true
+else
+    Calendar=false
+fi
+
+if bool_enabled "$Music" ;then
+    Music=true
+else
+    Music=false
+fi
+
+if bool_enabled "$Gallery" ;then
+    Gallery=true
+else
+    Gallery=false
+fi
+
+if bool_enabled "$MediaEditor" ;then
+    MediaEditor=true
+else
+    MediaEditor=false
+fi
+
+if bool_enabled "$ThemeManager" ;then
+    ThemeManager=true
+else
+    ThemeManager=false
+fi
+
+if bool_enabled "$SoundRecorder" ;then
+    SoundRecorder=true
+else
+    SoundRecorder=false
 fi
 
 if bool_enabled "$PersonalAssistant" || bool_enabled "$ContentExtension" ;then
@@ -137,7 +188,7 @@ touch "$MODPATH/system/etc/localization/SelectionSaved"
 
 log_section "Selected"
 enabled_summary=""
-for item in Mipay AppStore HybridPlatform ContentExtension PersonalAssistant Mms YellowPage AiAsst VoiceAssist RemoveMod; do
+for item in Mipay AppStore HybridPlatform ContentExtension PersonalAssistant Mms YellowPage AiAsst VoiceAssist RemoveMod Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager GboardTheme MiuiIme; do
     eval "item_value=\${$item:-false}"
     if bool_enabled "$item_value" ;then
         mark_selected "$item"
@@ -197,6 +248,38 @@ if ! bool_enabled "$Contacts" ;then
     remove_path "system/priv-app/Contacts"
 fi
 
+if ! $Calendar ;then
+    rm -rf $MODPATH/system/product/data-app/MIUICalendar
+fi
+
+if ! $Weather ;then
+    rm -rf $MODPATH/system/product/data-app/MIUIWeather
+fi
+
+if ! $Music ;then
+    rm -rf $MODPATH/system/product/data-app/MIUIMusicT
+fi
+
+if ! $Gallery ;then
+    rm -rf $MODPATH/system/product/priv-app/MiuiGallery
+fi
+
+if ! $MediaEditor ;then
+    rm -rf $MODPATH/system/product/app/MiMediaEditor
+fi
+
+if ! $ThemeManager ;then
+    rm -rf $MODPATH/system/app/ThemeManager
+fi
+
+if ! $SoundRecorder ;then
+    rm -rf $MODPATH/system/app/MiuiAudioMonitor_*
+    rm -rf $MODPATH/system/product/priv-app/SoundRecorder
+else
+    mv $MODPATH/system/app/MiuiAudioMonitor_$API $MODPATH/system/app/MiuiAudioMonitor
+    rm -rf $MODPATH/system/app/MiuiAudioMonitor_*
+fi
+
 if bool_enabled "$RemoveMod" ;then
     mkdir -p "$MODPATH/system/priv-app/CleanMaster"
     touch "$MODPATH/system/priv-app/CleanMaster/CleanMaster.apk"
@@ -214,6 +297,7 @@ if ! bool_enabled "$CatcherPatch" ;then
     remove_path "system/system_ext/app/CatcherPatch"
 fi
 
+
 echo "" >> $MODPATH/system.prop
 
 if bool_enabled "$Mipay" ;then
@@ -222,6 +306,15 @@ fi
 
 if bool_enabled "$AiAsst" ;then
     echo "ro.vendor.audio.aiasst.support=true" >> $MODPATH/system.prop
+fi
+
+if bool_enabled "$MiuiIme" ;then
+    echo "ro.miui.support_miui_ime_bottom=1" >> $MODPATH/system.prop
+fi
+
+if bool_enabled "$GboardTheme" ;then
+    echo "ro.com.google.ime.theme_dir=" >> $MODPATH/system.prop
+    echo "ro.com.google.ime.theme_file=" >> $MODPATH/system.prop
 fi
 
 if bool_enabled "$RemoveMod" ;then
@@ -260,6 +353,89 @@ if bool_enabled "$Contacts" ;then
 else
     if [ -e $MODDIR/system/etc/localization/Contacts ] ;then
         rm -rf /data/data/com.android.contacts/*
+    fi
+fi
+
+if bool_enabled "$Calendar" ;then
+    if [ ! -e $MODDIR/system/etc/localization/Calendar ] ;then
+        rm -rf /data/data/com.android.calendar/*
+    fi
+else
+    if [ -e $MODDIR/system/etc/localization/Calendar ] ;then
+        rm -rf /data/data/com.android.calendar/*
+    fi
+fi
+
+if bool_enabled "$Weather" ;then
+    if [ ! -e $MODDIR/system/etc/localization/Weather ] ;then
+        rm -rf /data/data/com.miui.weather/*
+    fi
+else
+    if [ -e $MODDIR/system/etc/localization/Weather ] ;then
+        rm -rf /data/data/com.miui.weather/*
+    fi
+fi
+
+if bool_enabled "$Music" ;then
+    if [ ! -e $MODDIR/system/etc/localization/Music ] ;then
+        rm -rf /data/data/com.miui.player/*
+    fi
+else
+    if [ -e $MODDIR/system/etc/localization/Music ] ;then
+        rm -rf /data/data/com.miui.player/*
+    fi
+fi
+
+if bool_enabled "$Gallery" ;then
+    if [ ! -e $MODDIR/system/etc/localization/Gallery ] ;then
+        rm -rf /data/data/com.miui.gallery/*
+        rm -rf /data/user/0/com.miui.gallery/*
+    fi
+else
+    if [ -e $MODDIR/system/etc/localization/Gallery ] ;then
+        rm -rf /data/data/com.miui.gallery/*
+        rm -rf /data/user/0/com.miui.gallery/*
+    fi
+fi
+
+if bool_enabled "$MediaEditor" ;then
+    if [ ! -e $MODDIR/system/etc/localization/MediaEditor ] ;then
+        rm -rf /data/data/com.miui.mediaeditor/*
+        rm -rf /data/user/0/com.miui.mediaeditor/*
+    fi
+else
+    if [ -e $MODDIR/system/etc/localization/MediaEditor ] ;then
+        rm -rf /data/data/com.miui.mediaeditor/*
+        rm -rf /data/user/0/com.miui.mediaeditor/*
+    fi
+fi
+
+if bool_enabled "$ThemeManager" ;then
+    rm -rf /data/miui/cust_variant
+    if [ ! -e $MODDIR/system/etc/localization/ThemeManager ] ;then
+        rm -rf /data/data/com.android.thememanager/*
+        rm -rf /data/user/0/com.android.thememanager/*
+    fi
+else
+    if [ -e $MODDIR/system/etc/localization/ThemeManager ] ;then
+        rm -rf /data/data/com.android.thememanager/*
+        rm -rf /data/user/0/com.android.thememanager/*
+    fi
+fi
+
+if bool_enabled "$SoundRecorder" ;then
+    if [ ! -e $MODDIR/system/etc/localization/SoundRecorder ] ;then
+        rm -rf /data/data/com.android.soundrecorder/*
+        rm -rf /data/user/0/com.android.soundrecorder/*
+        rm -rf /data/data/com.miui.audiomonitor/*
+        rm -rf /data/user/0/com.miui.audiomonitor/*
+    fi
+else
+    if [ -e $MODDIR/system/etc/localization/SoundRecorder ] ;then
+        rm -rf /data/data/com.android.soundrecorder/*
+        rm -rf /data/user/0/com.android.soundrecorder/*
+        rm -rf /data/data/com.miui.audiomonitor/*
+        rm -rf /data/user/0/com.miui.audiomonitor/*
     fi
 fi
 
