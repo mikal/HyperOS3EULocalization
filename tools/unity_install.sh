@@ -104,6 +104,7 @@ SoundRecorder=${SoundRecorder:-false}
 ThemeManager=${ThemeManager:-false}
 GboardTheme=${GboardTheme:-false}
 MiuiIme=${MiuiIme:-false}
+MiPush=${MiPush:-false}
 
 if [ ! -e "$MODPATH/system/product/app/MINextpay" ] || [ ! -e "$MODPATH/system/product/app/MITSMClient" ] || [ ! -e "$MODPATH/system/product/app/MipayWallet" ] || [ ! -e "$MODPATH/system/product/app/UPTsmService" ] || [ ! -e "$MODPATH/system/product/app/PaymentService" ] ;then
     Mipay=false
@@ -188,7 +189,7 @@ touch "$MODPATH/system/etc/localization/SelectionSaved"
 
 log_section "Selected"
 enabled_summary=""
-for item in Mipay AppStore HybridPlatform ContentExtension PersonalAssistant Mms YellowPage AiAsst VoiceAssist RemoveMod Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager GboardTheme MiuiIme; do
+for item in Mipay AppStore HybridPlatform ContentExtension PersonalAssistant Mms YellowPage AiAsst VoiceAssist RemoveMod Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager GboardTheme MiuiIme MiPush; do
     eval "item_value=\${$item:-false}"
     if bool_enabled "$item_value" ;then
         mark_selected "$item"
@@ -320,6 +321,10 @@ fi
 if bool_enabled "$RemoveMod" ;then
     echo "ro.product.mod_device=xiaomieu" >> $MODPATH/system.prop
     echo "ro.miui.region=CN" >> $MODPATH/system.prop
+fi
+
+if bool_enabled "$MiPush" ;then
+    echo "ro.miui.cust_variant=cn" >> $MODPATH/system.prop
 fi
 
 echo "" >> $MODPATH/system.prop

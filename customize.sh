@@ -69,7 +69,7 @@ set_config() {
 }
 
 enable_all() {
-    local keys="Mipay AppStore VoiceAssist PersonalAssistant Mms ContentExtension YellowPage AiAsst RemoveMod HybridPlatform Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager"
+    local keys="Mipay AppStore VoiceAssist PersonalAssistant Mms ContentExtension YellowPage AiAsst RemoveMod HybridPlatform Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager MiPush"
     for key in $keys; do
         set_config $key "true"
     done
@@ -96,6 +96,7 @@ SoundRecorder=false
 ThemeManager=false
 GboardTheme=false
 MiuiIme=false
+MiPush=false
 EOF
 }
 
@@ -197,7 +198,17 @@ else
     fi
 
     ui_print ""
-    ui_print "Q9: Input Method"
+    ui_print "Q9: MiPush (CN region)"
+    ui_print "  Switch XMSF push server to China region"
+    if vk_choose; then
+        print_success "Selected MiPush CN"
+        set_config "MiPush" "true"
+    else
+        print_info "Skipped MiPush"
+    fi
+
+    ui_print ""
+    ui_print "Q10: Input Method"
     ui_print "  GboardTheme / MiuiIme CN"
     if vk_choose; then
         print_success "Selected Input Method"

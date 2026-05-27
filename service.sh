@@ -3,6 +3,12 @@ MODDIR=${0%/*}
 
 SYSTEM_VERSION=`getprop ro.system.build.version.incremental`
 
+if [ -f $MODDIR/system/etc/localization/MiPush ] ;then
+    MiPush=true
+else
+    MiPush=false
+fi
+
 cache_clean() {
     if [ ! -f $MODDIR/system/etc/localization/SystemVersion/$SYSTEM_VERSION ] ;then
         rm -rf /data/system/package_cache/*
@@ -32,10 +38,29 @@ force_install_cn_apks() {
 
     mkdir -p $TMPDIR
 
+    # Save log to module directory for debugging
+    mkdir -p "$MODDIR/logs"
+    local install_log="$MODDIR/logs/install_log.txt"
+    echo "=== Installation started at $(date) ===" > "$install_log"
+
+    # Install conflict-causing apps first (Notes, AOD) to resolve permission conflicts.
+    # This is required before installing data-app / system-signed apps like Calendar,
+    # Weather, Music and ThemeManager, otherwise pm install will fail.
+    for apk in \
+        "$MODDIR/system/product/app/Notes/Notes.apk" \
+        "$MODDIR/system/product/priv-app/MiuiAod/MiuiAod.apk"; do
+        if [ -f "$apk" ]; then
+            cp "$apk" "$TMPDIR/$(basename $apk)"
+            pm install -r -d -g "$TMPDIR/$(basename $apk)" >/dev/null 2>&1
+            rm -f "$TMPDIR/$(basename $apk)"
+        fi
+    done
+
+    sleep 3
+
     # Build the list of APKs to install based on user's selection
     # (selection is recorded as marker files under system/etc/localization/)
     local apk_list=""
-    local install_log="$TMPDIR/install_log.txt"
 
     if [ -f "$MODDIR/system/etc/localization/Calendar" ]; then
         apk_list="$apk_list $MODDIR/system/product/data-app/MIUICalendar/MIUICalendar.apk"
@@ -67,26 +92,16 @@ force_install_cn_apks() {
     fi
 
     # Install each APK.
+    # -r: replace existing package
     # -d: allow version downgrade / signature mismatch
     # -g: grant all runtime permissions
-    # -t: allow test packages (important for data-app)
-    # --user 0: install for the primary user
-    
-    # Save log to module directory for debugging
-    mkdir -p "$MODDIR/logs"
-    local install_log="$MODDIR/logs/install_log.txt"
-    echo "=== Installation started at $(date) ===" > "$install_log"
-    
     for apk in $apk_list; do
         if [ -f "$apk" ]; then
             local tmp_apk="$TMPDIR/$(basename $apk)"
             cp "$apk" "$tmp_apk"
-            
-            # Try with -r first (replace)
-            if pm install -r -d -g -t --user 0 "$tmp_apk" >/dev/null 2>&1; then
+            if pm install -r -d -g "$tmp_apk" >/dev/null 2>&1; then
                 echo "SUCCESS: $(basename $apk)" >> "$install_log"
-            # If fails, try fresh install (EU ROM may not have the package)
-            elif pm install -d -g -t --user 0 "$tmp_apk" >/dev/null 2>&1; then
+            elif pm install -d -g "$tmp_apk" >/dev/null 2>&1; then
                 echo "SUCCESS (fresh): $(basename $apk)" >> "$install_log"
             else
                 echo "FAILED: $(basename $apk)" >> "$install_log"
@@ -94,7 +109,7 @@ force_install_cn_apks() {
             rm -f "$tmp_apk"
         fi
     done
-    
+
     echo "=== Installation finished at $(date) ===" >> "$install_log"
 
     rm -rf $TMPDIR
@@ -103,6 +118,35 @@ force_install_cn_apks() {
     touch "$MARKER"
 }
 
+set_mipush_region() {
+    local base_dir
+    local files_dir
+    local uid
+
+    if [ -d /data/user_de/0/com.xiaomi.xmsf ]; then
+        base_dir=/data/user_de/0/com.xiaomi.xmsf
+    else
+        base_dir=/data/data/com.xiaomi.xmsf
+    fi
+
+    files_dir="$base_dir/files"
+    mkdir -p "$files_dir"
+
+    printf '%s\n' CN > "$files_dir/mipush_country_code"
+    printf '%s\n' China > "$files_dir/mipush_region"
+
+    uid="$(dumpsys package com.xiaomi.xmsf 2>/dev/null | sed -n 's/.*userId=//p' | sed -n '1p' | tr -d '\r')"
+    if [ -n "$uid" ]; then
+        chown -R "$uid:$uid" "$base_dir" 2>/dev/null || true
+    fi
+
+    restorecon -R "$base_dir" 2>/dev/null || true
+}
+
 
 cache_clean
 force_install_cn_apks &
+
+if $MiPush ; then
+    set_mipush_region
+fi

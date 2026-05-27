@@ -57,7 +57,18 @@ jobs:
           zip -r "HyperOS3_EU_Localization_${VERSION}.zip" \
             META-INF module.prop customize.sh service.sh uninstall.sh lang tools \
             -x "*.git*"
-            
+            -x ".github/*" \
+            -x ".gitattributes" \
+            -x ".gitignore" \
+            -x "*.md"
+            -x "**/.DS_Store" \
+            -x "**/__MACOSX/*" \
+            -x "**/.AppleDouble/*" \
+            -x "**/.Spotlight-V100/*" \
+            -x "**/.Trashes/*" \
+            -x "**/Icon*" \
+            -x "**/Thumbs.db"
+
           # Add system files if available
           if [ -d "system" ]; then
             zip -ur "HyperOS3_EU_Localization_${VERSION}.zip" system
