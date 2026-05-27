@@ -9,7 +9,7 @@ REPLACE=""
 
 print_banner() {
     ui_print ""
-    ui_print "[HyperOS3 EU Localization v2.0]"
+    ui_print "[HyperOS3 EU Localization v2.0.6]"
     ui_print "Author: LSHFGJ"
     ui_print "Target: Any HyperOS 3 device/build"
     ui_print ""
