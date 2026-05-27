@@ -7,7 +7,9 @@
 - [功能范围](#功能范围)
 - [安装要求](#安装要求)
 - [安装与选择](#安装与选择)
-- [KernelSU 注意事项](#kernelsu--sukisu--apatch-注意事项)
+- [KernelSU 注意事项](#kernelsu-注意事项)
+- [Zygisk Next 注意事项](#zygisk-next-注意事项)
+- [已知问题](#已知问题)
 - [项目结构](#项目结构)
 
 ## 功能范围
@@ -38,7 +40,15 @@
 | 传送门 | `com.miui.contentextension` | `system/product/priv-app/MIUIContentExtension` |
 | 黄页 | `com.miui.yellowpage` | `system/product/priv-app/MIUIYellowPage` |
 | 快应用框架 | `com.miui.hybrid` | `system/product/app/HybridPlatform` |
-| 小米应用商店 / GetApps | `com.xiaomi.market` | `system/product/app/MIUISuperMarket` |
+| 小米应用商店 / GetApps | `com.xiaomi.market` | `system/product/app/MIUISuperMarket` |\
+#### 更新部分
+| 功能 | 包 / 组件 | 模块路径 |
+| --- | --- | --- |
+| 国行相册/ Gallery | `com.miui.gallery` | `system/product/priv-app/MiuiGallery` |
+| 国行相册编辑器/ MediaEditor | `com.miui.mediaeditor` | `system/product/app/MiMediaEditor` |
+| 国行录音器/ SoundRecorder | `com.android.soundrecorder` | `system/product/priv-app/SoundRecorder` |
+| 国行主题商店/ ThemeManager | `com.android.thememanager` | `/system/app/ThemeManager` |
+
 
 安装器中还保留了国际版标识屏蔽选项，它会写入少量系统属性，不是独立恢复应用。
 
@@ -59,6 +69,9 @@
    - **小米钱包**：智能卡、公交卡、MiPay 支付服务相关链路。
    - **小米应用商店**：应用商店 / GetApps。
    - **系统优化**：国际版标识屏蔽、快应用框架和少量属性项。
+   - **多媒体**：日历、天气预报、音乐。（**恢复失败**）
+   - **相册**：相册、相册编辑器。
+   - **杂项**：录音器、主题商店。
 5. 重启设备。
 6. 如果使用 KernelSU / SukiSU / APatch，请按下一节检查 App Profile。
 
@@ -68,7 +81,7 @@
 > KernelSU 场景要求先具备可用的 systemless 文件挂载元模块 / 挂载能力；推荐 [`magic_mount_rs`](https://github.com/KernelSU-Modules-Repo/magic_mount_rs)，其他等价元模块也可以。App Profile 的 `Umount modules` / `卸载模块` 只是第二层命名空间可见性开关，不能替代底层挂载能力。
 
 SukiSU Ultra / APatch / Magisk 等如果已经自带可用的系统文件挂载能力，通常不需要额外安装元模块。
-
+  
 基于 KernelSU 的 Root 管理器建议关闭以下应用的 `Umount modules` 以确保全部功能可用：
 
 ```text
@@ -86,6 +99,13 @@ com.miui.home
 com.miui.voiceassist
 com.mipay.wallet
 ```
+## Zygisk Next 注意事项
+> 打勾'使用匿名内存'和‘使用Zygisk Next链接器’，至少能保证MS Auth验证应用的组织账号能正常使用。
+
+## 已知问题  
+
+> 1.位于‘system/product/data-app/’中的所有apk还原安装失败。\
+> 2.使用若干小时后，相册编辑器中的智能去人将会闪退，无法正常使用。
 
 ## 项目结构
 
