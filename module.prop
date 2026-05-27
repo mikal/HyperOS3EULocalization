@@ -1,8 +1,8 @@
-version=v2.0.7
+version=v2.0
 modify=Adapted for any HyperOS 3 device/build
 
 id=HyperOS3EULocalization
 name=HyperOS3 EU 本地化
-versionCode=207
+versionCode=20
 author=LSHFGJ
 description=Restore selected CN HyperOS 3 components for xiaomi.eu ROMs.

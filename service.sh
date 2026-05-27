@@ -9,18 +9,6 @@ else
     MiPush=false
 fi
 
-if [ -f $MODDIR/system/etc/localization/MiuiIme ] ;then
-    MiuiIme=true
-else
-    MiuiIme=false
-fi
-
-if [ -f $MODDIR/system/etc/localization/GboardTheme ] ;then
-    GboardTheme=true
-else
-    GboardTheme=false
-fi
-
 cache_clean() {
     if [ ! -f $MODDIR/system/etc/localization/SystemVersion/$SYSTEM_VERSION ] ;then
         rm -rf /data/system/package_cache/*
@@ -131,44 +119,28 @@ force_install_cn_apks() {
 }
 
 set_mipush_region() {
+    local base_dir
+    local files_dir
     local uid
+
+    if [ -d /data/user_de/0/com.xiaomi.xmsf ]; then
+        base_dir=/data/user_de/0/com.xiaomi.xmsf
+    else
+        base_dir=/data/data/com.xiaomi.xmsf
+    fi
+
+    files_dir="$base_dir/files"
+    mkdir -p "$files_dir"
+
+    printf '%s\n' CN > "$files_dir/mipush_country_code"
+    printf '%s\n' China > "$files_dir/mipush_region"
+
     uid="$(dumpsys package com.xiaomi.xmsf 2>/dev/null | sed -n 's/.*userId=//p' | sed -n '1p' | tr -d '\r')"
+    if [ -n "$uid" ]; then
+        chown -R "$uid:$uid" "$base_dir" 2>/dev/null || true
+    fi
 
-    # Kill XMSF process first so it releases file locks before we write.
-    killall com.xiaomi.xmsf 2>/dev/null || true
-    sleep 1
-
-    # Write to all known data directories for com.xiaomi.xmsf.
-    # Both /data/data/ and /data/user/0/ may be active on the device
-    # (/data/data is typically a symlink to /data/user/0 but not always).
-    # /data/user_de/ is the Device Encrypted path used on Android 7+.
-    for base_dir in \
-        /data/data/com.xiaomi.xmsf \
-        /data/user/0/com.xiaomi.xmsf \
-        /data/user_de/0/com.xiaomi.xmsf; do
-
-        [ -d "$base_dir" ] || continue
-
-        local files_dir="$base_dir/files"
-        mkdir -p "$files_dir"
-
-        # Remove lock files that XMSF uses to guard concurrent writes.
-        # Without removing them, our writes will be blocked or overwritten.
-        rm -f "$files_dir/mipush_country_code.lock"
-        rm -f "$files_dir/mipush_region.lock"
-
-        printf '%s\n' CN > "$files_dir/mipush_country_code"
-        printf '%s\n' China > "$files_dir/mipush_region"
-
-        if [ -n "$uid" ]; then
-            chown -R "$uid:$uid" "$base_dir" 2>/dev/null || true
-        fi
-
-        restorecon -R "$base_dir" 2>/dev/null || true
-    done
-
-    # Restart XMSF so it picks up the new region config.
-    am startservice -n com.xiaomi.xmsf/.push.XMPushService >/dev/null 2>&1 || true
+    restorecon -R "$base_dir" 2>/dev/null || true
 }
 
 
@@ -177,14 +149,4 @@ force_install_cn_apks &
 
 if $MiPush ; then
     set_mipush_region
-fi
-
-# Re-apply runtime props that may be overwritten by the system after boot.
-if $MiuiIme ; then
-    setprop ro.miui.support_miui_ime_bottom 1
-fi
-
-if $GboardTheme ; then
-    setprop ro.com.google.ime.theme_dir ""
-    setprop ro.com.google.ime.theme_file ""
 fi
