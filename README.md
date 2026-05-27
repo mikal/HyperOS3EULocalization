@@ -6,6 +6,7 @@
 
 - [功能范围](#功能范围)
 - [安装要求](#安装要求)
+- [测试环境](#测试环境)
 - [安装与选择](#安装与选择)
 - [KernelSU 注意事项](#kernelsu-注意事项)
 - [Zygisk Next 注意事项](#zygisk-next-注意事项)
@@ -58,6 +59,12 @@
 
 > [!NOTE]
 > 模块不再绑定固定机型或固定版本号，但仍然面向 HyperOS 3。非 xiaomi.eu 或非 HyperOS 3 环境可能可以刷入，但不保证功能表现。建议先完整备份重要数据，并确认能进入 Recovery / Fastboot 以便回滚。
+
+## 测试环境
+- 设备：小米17 Ultra徕卡版(Nezha)
+- 系统版本: OS3.0.304.0.WPACNXM (xiaomi.eu)
+- KernelSU版本: 32457
+- KernelSU元模块: Magic Mount-rs v4.0.0-709
 
 ## 安装与选择
 
