@@ -125,5 +125,6 @@ HyperOS3EULocalization/
 ```
 
 ## 致谢
-
+LSHFGJ搭建的框架 [LSHFGJ\HyperOS3EULocalization](https://github.com/LSHFGJ/HyperOS3EULocalization)\
+酷安大佬x大佬某 [EU-fix](https://www.123865.com/s/hBk7jv-zUuOA?pwd=o3T8)\
 本项目基于 [MinaMichita/MiuiEULocalizationToolsBox](https://github.com/MinaMichita/MiuiEULocalizationToolsBox) 的原始工作继续调整，感谢原作者的开创性工作。

@@ -119,28 +119,32 @@ force_install_cn_apks() {
 }
 
 set_mipush_region() {
-    local base_dir
-    local files_dir
     local uid
-
-    if [ -d /data/user_de/0/com.xiaomi.xmsf ]; then
-        base_dir=/data/user_de/0/com.xiaomi.xmsf
-    else
-        base_dir=/data/data/com.xiaomi.xmsf
-    fi
-
-    files_dir="$base_dir/files"
-    mkdir -p "$files_dir"
-
-    printf '%s\n' CN > "$files_dir/mipush_country_code"
-    printf '%s\n' China > "$files_dir/mipush_region"
-
     uid="$(dumpsys package com.xiaomi.xmsf 2>/dev/null | sed -n 's/.*userId=//p' | sed -n '1p' | tr -d '\r')"
-    if [ -n "$uid" ]; then
-        chown -R "$uid:$uid" "$base_dir" 2>/dev/null || true
-    fi
 
-    restorecon -R "$base_dir" 2>/dev/null || true
+    # Write to all known data directories for com.xiaomi.xmsf.
+    # Both /data/data/ and /data/user/0/ may be active on the device
+    # (/data/data is typically a symlink to /data/user/0 but not always).
+    # /data/user_de/ is the Device Encrypted path used on Android 7+.
+    for base_dir in \
+        /data/data/com.xiaomi.xmsf \
+        /data/user/0/com.xiaomi.xmsf \
+        /data/user_de/0/com.xiaomi.xmsf; do
+
+        [ -d "$base_dir" ] || continue
+
+        local files_dir="$base_dir/files"
+        mkdir -p "$files_dir"
+
+        printf '%s\n' CN > "$files_dir/mipush_country_code"
+        printf '%s\n' China > "$files_dir/mipush_region"
+
+        if [ -n "$uid" ]; then
+            chown -R "$uid:$uid" "$base_dir" 2>/dev/null || true
+        fi
+
+        restorecon -R "$base_dir" 2>/dev/null || true
+    done
 }
 
 
