@@ -69,7 +69,7 @@ set_config() {
 }
 
 enable_all() {
-    local keys="Mipay AppStore VoiceAssist PersonalAssistant Mms ContentExtension YellowPage AiAsst RemoveMod HybridPlatform Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager MiPush"
+    local keys="Mipay AppStore VoiceAssist PersonalAssistant Mms ContentExtension YellowPage AiAsst RemoveMod HybridPlatform Calendar Weather Music Gallery MediaEditor SoundRecorder ThemeManager MiPush GboardTheme MiuiIme"
     for key in $keys; do
         set_config $key "true"
     done

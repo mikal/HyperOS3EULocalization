@@ -69,9 +69,11 @@
    - **小米钱包**：智能卡、公交卡、MiPay 支付服务相关链路。
    - **小米应用商店**：应用商店 / GetApps。
    - **系统优化**：国际版标识屏蔽、快应用框架和少量属性项。
-   - **多媒体**：日历、天气预报、音乐。（**恢复失败**）
+   - **多媒体**：日历、天气预报、音乐。
    - **相册**：相册、相册编辑器。
    - **杂项**：录音器、主题商店。
+   - **小米框架**：MiPush回国内。（效果待定）
+   - **输入法**：剪切板、谷歌输入法优化。
 5. 重启设备。
 6. 如果使用 KernelSU / SukiSU / APatch，请按下一节检查 App Profile。
 
@@ -104,7 +106,7 @@ com.mipay.wallet
 
 ## 已知问题  
 
-> 1.位于‘system/product/data-app/’中的所有apk还原安装失败。\
+> ~~1.位于‘system/product/data-app/’中的所有apk还原安装失败。~~\
 > 2.使用若干小时后，相册编辑器中的智能去人将会闪退，无法正常使用。
 
 ## 项目结构
@@ -126,4 +128,6 @@ HyperOS3EULocalization/
 
 ## 致谢
 
-本项目基于 [MinaMichita/MiuiEULocalizationToolsBox](https://github.com/MinaMichita/MiuiEULocalizationToolsBox) 的原始工作继续调整，感谢原作者的开创性工作。
+1.本项目基于 [MinaMichita/MiuiEULocalizationToolsBox](https://github.com/MinaMichita/MiuiEULocalizationToolsBox) 的原始工作继续调整，感谢原作者的开创性工作。  
+2.部分应用来源于酷安x某大佬的无私分享[EU-fix](https://www.123865.com/s/hBk7jv-zUuOA?pwd=o3T8)。
+
